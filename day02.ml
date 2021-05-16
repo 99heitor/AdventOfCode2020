@@ -1,6 +1,8 @@
 open Core
 open Printf
 
+let ( let+ ) x f = Option.map ~f x
+
 type password_data = {
   first : int;
   second : int;
@@ -19,8 +21,8 @@ let parse_password_data line =
   match String.split ~on:' ' line with
   | [ dashed; letter_colon; password ] ->
       let letter = letter_colon.[0] in
-      Option.map (parse_dashed dashed) ~f:(fun (first, second) ->
-          { first; second; letter; password })
+      let+ first, second = parse_dashed dashed in
+      { first; second; letter; password }
   | _ -> None
 
 let rule_1 data : bool =

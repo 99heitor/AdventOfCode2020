@@ -2,6 +2,8 @@ open Core
 open Option
 open Printf
 
+let ( let+ ) x f = Option.map ~f x
+
 type comparison = Lt | Eq | Gt
 
 let comp x y = if x < y then Lt else if x > y then Gt else Eq
@@ -22,7 +24,8 @@ let find2sum input sum =
 
 let find3sum input sum =
   List.find_map input ~f:(fun c ->
-      Option.map (find2sum input (sum - c)) ~f:(fun (a, b) -> (a, b, c)))
+      let+ a, b = find2sum input (sum - c) in
+      (a, b, c))
 
 let part1 input sum = find2sum input sum |> map ~f:(fun (a, b) -> a * b)
 

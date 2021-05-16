@@ -1,12 +1,12 @@
 open Core
 open Printf
 
+let ( let+ ) x f = Option.map ~f x
+
 let generate_tree_map (input : string list) : int -> int -> bool option =
- fun x ->
-  match List.nth input x with
-  | Some row ->
-      fun y -> Some (Char.equal '#' (String.get row (y mod String.length row)))
-  | _ -> fun _ -> None
+ fun x y ->
+  let+ row = List.nth input x in
+  Char.equal '#' (String.get row (y mod String.length row))
 
 let generate_slide_stream tree_map x y =
   Stream.from (fun i -> tree_map (i * x) (i * y))
